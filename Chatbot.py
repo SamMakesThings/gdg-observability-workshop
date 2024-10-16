@@ -1,4 +1,4 @@
-from anthropic import Anthropic, HUMAN_PROMPT, AI_PROMPT
+from anthropic import Anthropic
 import streamlit as st
 
 with st.sidebar:
@@ -10,10 +10,13 @@ with st.sidebar:
 st.title("💬 Chatbot")
 st.caption("🚀 A Streamlit chatbot powered by Anthropic")
 if "messages" not in st.session_state:
-    st.session_state["messages"] = [{"role": "assistant", "content": "How can I help you?"}]
+    st.session_state["messages"] = [
+        {"role": "assistant", "content": "Hello! I'm your virtual shopping assistant. How can I help you?"}
+    ]
 
 for msg in st.session_state.messages:
-    st.chat_message(msg["role"]).write(msg["content"])
+    if msg["role"] != "system":
+        st.chat_message(msg["role"]).write(msg["content"])
 
 if prompt := st.chat_input():
     if not anthropic_api_key:
@@ -24,15 +27,12 @@ if prompt := st.chat_input():
     st.session_state.messages.append({"role": "user", "content": prompt})
     st.chat_message("user").write(prompt)
     
-    conversation = "\n\nHuman: " + "\n\nHuman: ".join([msg['content'] for msg in st.session_state.messages if msg['role'] == 'user'])
-    conversation += "\n\nAssistant: " + "\n\nAssistant: ".join([msg['content'] for msg in st.session_state.messages if msg['role'] == 'assistant'])
-    
-    response = client.completions.create(
-        model="claude-2",
-        prompt=f"{conversation}\n\nHuman: {prompt}\n\nAssistant:",
-        max_tokens_to_sample=300,
-        stop_sequences=["\n\nHuman:"]
+    response = client.messages.create(
+        model="claude-2.0",
+        system="You are an e-commerce shopping assistant for a store that sells shoes. Answer questions about your store's products, and always provide a product link. The store name is ACME Shoes.",
+        messages=st.session_state.messages,
+        max_tokens=300
     )
-    msg = response.completion.strip()
+    msg = response.content[0].text
     st.session_state.messages.append({"role": "assistant", "content": msg})
     st.chat_message("assistant").write(msg)
