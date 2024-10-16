@@ -1,4 +1,5 @@
-# 🎈 Streamlit + LLM Examples App
+# 🛍️ AWS production LLMs workshop
+Our example is a simple e-commerce chatbot that lets you ask questions about products, and gives links as appropriate.
 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/streamlit/llm-examples?quickstart=1)
 
