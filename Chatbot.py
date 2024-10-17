@@ -4,10 +4,21 @@ from product_data import shoes_data
 import json
 import weave
 
+weave.init("ecom-chat")
+
 class AnthropicChatbot(weave.Model):
     system_prompt: str
     model_name: str = "claude-2.0"
     max_tokens: int = 300
+
+    def __init__(self):
+        formatted_shoes_data = json.dumps(shoes_data, indent=2)
+        self.system_prompt = f"""You are an e-commerce shopping assistant for a store that sells shoes. Answer questions about your store's products, and always provide a product link. The store name is ACME Shoes.
+
+Available products:
+{formatted_shoes_data}
+
+Use this product information to answer customer queries accurately."""
 
     def predict(self, messages: list) -> str:
         client = Anthropic(api_key=st.session_state.anthropic_api_key)
@@ -19,6 +30,7 @@ class AnthropicChatbot(weave.Model):
         )
         return response.content[0].text
 
+@weave.op()
 def setup_sidebar():
     with st.sidebar:
         anthropic_api_key = st.text_input("Anthropic API Key", key="chatbot_api_key", type="password")
@@ -27,6 +39,7 @@ def setup_sidebar():
         "[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/streamlit/llm-examples?quickstart=1)"
     return anthropic_api_key
 
+@weave.op()
 def run_chatbot(anthropic_api_key):
     st.title("💬 Chatbot")
     st.caption("🚀 A Streamlit chatbot powered by Anthropic")
@@ -48,15 +61,7 @@ def run_chatbot(anthropic_api_key):
         st.session_state.messages.append({"role": "user", "content": prompt})
         st.chat_message("user").write(prompt)
         
-        formatted_shoes_data = json.dumps(shoes_data, indent=2)
-        system_prompt = f"""You are an e-commerce shopping assistant for a store that sells shoes. Answer questions about your store's products, and always provide a product link. The store name is ACME Shoes.
-
-Available products:
-{formatted_shoes_data}
-
-Use this product information to answer customer queries accurately."""
-
-        model = AnthropicChatbot(system_prompt=system_prompt)
+        model = AnthropicChatbot()
         response = model.predict(st.session_state.messages)
         
         st.session_state.messages.append({"role": "assistant", "content": response})
