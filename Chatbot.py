@@ -3,11 +3,15 @@ import streamlit as st
 from product_data import shoes_data
 import json
 import weave
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 weave.init("ecom-chat")
 
 class AnthropicChatbot(weave.Model):
-    system_prompt: str
+    system_prompt: str = ""
     model_name: str = "claude-2.0"
     max_tokens: int = 300
 
@@ -33,14 +37,12 @@ Use this product information to answer customer queries accurately."""
 @weave.op()
 def setup_sidebar():
     with st.sidebar:
-        anthropic_api_key = st.text_input("Anthropic API Key", key="chatbot_api_key", type="password")
-        "[Get an Anthropic API key](https://console.anthropic.com/settings/api-keys)"
+        "[Get an Anthropic API key to put in your .env file](https://console.anthropic.com/settings/api-keys)"
         "[View the source code](https://github.com/streamlit/llm-examples/blob/main/Chatbot.py)"
         "[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/streamlit/llm-examples?quickstart=1)"
-    return anthropic_api_key
 
 @weave.op()
-def run_chatbot(anthropic_api_key):
+def run_chatbot():
     st.title("💬 Chatbot")
     st.caption("🚀 A Streamlit chatbot powered by Anthropic")
     if "messages" not in st.session_state:
@@ -51,6 +53,8 @@ def run_chatbot(anthropic_api_key):
     for msg in st.session_state.messages:
         if msg["role"] != "system":
             st.chat_message(msg["role"]).write(msg["content"])
+
+    anthropic_api_key = os.getenv("ANTHROPIC_API_KEY")
 
     if prompt := st.chat_input():
         if not anthropic_api_key:
@@ -69,4 +73,4 @@ def run_chatbot(anthropic_api_key):
 
 anthropic_api_key = setup_sidebar()
 
-run_chatbot(anthropic_api_key)
+run_chatbot()
