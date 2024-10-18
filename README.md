@@ -6,7 +6,7 @@ Our example is a simple e-commerce chatbot that lets you ask questions about pro
 
 You can get your own Anthropic API key by following the following instructions:
 
-1. Go to https://console.anthropic.com/settings/api-keys.
+1. Go to https://console.anthropic.com/.
 2. Click on the `+ Create new secret key` button.
 3. Next, enter an identifier name (optional) and click on the `Create secret key` button.
 
