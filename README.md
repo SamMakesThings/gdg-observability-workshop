@@ -27,5 +27,5 @@ ANTHROPIC_API_KEY='xxxxxxxxxx'
 virtualenv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-streamlit run Chatbot.py
+streamlit run chatbot.py
 ```
