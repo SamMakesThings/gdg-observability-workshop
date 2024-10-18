@@ -11,11 +11,12 @@ load_dotenv()
 weave.init("ecom-chat")
 
 class AnthropicChatbot(weave.Model):
-    system_prompt: str = ""
+    system_prompt: str = "You are a chatbot."
     model_name: str = "claude-2.0"
     max_tokens: int = 300
 
-    def __init__(self):
+    def __init__(self, **data):
+        super().__init__(**data)
         formatted_shoes_data = json.dumps(shoes_data, indent=2)
         self.system_prompt = f"""You are an e-commerce shopping assistant for a store that sells shoes. Answer questions about your store's products, and always provide a product link. The store name is ACME Shoes.
 
@@ -71,6 +72,5 @@ def run_chatbot():
         st.session_state.messages.append({"role": "assistant", "content": response})
         st.chat_message("assistant").write(response)
 
-anthropic_api_key = setup_sidebar()
 
 run_chatbot()
