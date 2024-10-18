@@ -38,7 +38,7 @@ Use this product information to answer customer queries accurately."""
 def setup_sidebar():
     with st.sidebar:
         "[Get an Anthropic API key to put in your .env file](https://console.anthropic.com/settings/api-keys)"
-        "[View the source code](https://github.com/streamlit/llm-examples/blob/main/chatbot.py)"
+        "[View the source code](https://github.com/streamlit/llm-examples/blob/main/main.py)"
         "[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/streamlit/llm-examples?quickstart=1)"
 
 @weave.op()
