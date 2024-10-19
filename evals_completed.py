@@ -82,17 +82,15 @@ async def is_accurate(reference_output: str, model_output: str) -> dict:
 
 
 
-def run_evals():
 
-    model = AnthropicChatbot()
-    
-    evaluation = weave.Evaluation(  
-        name='general_evals',  
-        dataset=evaluation_data,
-        scorers=[are_links_valid, is_response_length_good, is_accurate]
-    )
 
-    print(asyncio.run(evaluation.evaluate(model)))
-    return evaluation
+model = AnthropicChatbot()
 
-run_evals()
+evaluation = weave.Evaluation(  
+    name='general_evals',  
+    dataset=evaluation_data,
+    scorers=[are_links_valid, is_response_length_good, is_accurate]
+)
+
+print(asyncio.run(evaluation.evaluate(model)))
+
