@@ -22,7 +22,7 @@ shoe_links = [shoe["link"] for shoe in shoes_data]
 def are_links_valid(model_output: str):
 	# Use a regular expression to check for links, then ensure it's an exact match for one of the links list
 
-	url_pattern = r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)'
+	url_pattern = r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}([-a-zA-Z0-9()@:%_\+.~#?&//=]*)'
 
 	url_regex = re.compile(url_pattern, re.IGNORECASE)
 
@@ -31,7 +31,7 @@ def are_links_valid(model_output: str):
 	
 	# Check to see if found URLs are valid or not
 	for url in urls:
-		if url not in shoe_links:
+		if url[0] not in shoe_links:  # Change: url[0] instead of url
 			return False
 	
 	return True
@@ -93,4 +93,6 @@ evaluation = weave.Evaluation(
 )
 
 print(asyncio.run(evaluation.evaluate(model)))
+
+
 
