@@ -1,4 +1,3 @@
-import weave
 import os
 from dotenv import load_dotenv
 from chat_model import AnthropicChatbot
@@ -7,17 +6,13 @@ from product_data import shoes_data
 
 load_dotenv()
 
-weave.init("ecom-chat")
-
 anthropic_api_key = os.getenv("ANTHROPIC_API_KEY")
 
-@weave.op()
 def setup_sidebar():
     with st.sidebar:
         "[Get an Anthropic API key to put in your .env file](https://console.anthropic.com/settings/api-keys)"
     return None
 
-@weave.op()
 def run_chatbot():
     st.title("💬 Chatbot")
     st.caption("🚀 A Streamlit chatbot powered by Anthropic")
