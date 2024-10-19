@@ -1,5 +1,4 @@
 import weave
-from argparse import ArgumentParser
 import os
 from dotenv import load_dotenv
 from chat_model import AnthropicChatbot
