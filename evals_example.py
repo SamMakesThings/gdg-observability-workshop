@@ -47,13 +47,13 @@ def is_response_length_good(model_output: str) -> bool:
     Returns:
     bool: True if the output is longer than 280 characters, False otherwise.
     """
-    return len(model_output) > 280
+    return len(model_output) < 280
 
 @weave.op()
-async def is_accurate(expected_output: str, model_output: str) -> dict:
+async def is_accurate(reference_output: str, model_output: str) -> dict:
     evaluation_prompt = """You are an expert evaluator of chatbot responses. Your task is to compare an expected output with the actual model output and determine if they convey mostly the same information. Focus on the key points and overall meaning rather than exact wording.
 
-    Expected Output: {expected_output}
+    Expected Output: {reference_output}
     Model Output: {model_output}
 
     Evaluate if the Model Output conveys essentially the same information as the Expected Output. Provide your verdict as a JSON object with a single key "verdict" and a value of 1 if they match closely, or 0 if they differ significantly.
@@ -68,7 +68,7 @@ async def is_accurate(expected_output: str, model_output: str) -> dict:
         max_tokens=300,
         messages=[
             {"role": "user", "content": evaluation_prompt.format(
-                expected_output=expected_output,
+                reference_output=reference_output,
                 model_output=model_output
             )}
         ],
