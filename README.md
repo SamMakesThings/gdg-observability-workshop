@@ -25,3 +25,11 @@ source .venv/bin/activate
 pip install -r requirements.txt
 streamlit run main.py
 ```
+
+
+## Running evals
+
+```sh
+python evals.py
+```
+OR, to run the demo evals, use `python evals_completed.py`
