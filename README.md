@@ -1,7 +1,6 @@
 # 🛍️ AWS production LLMs workshop
 Our example is a simple e-commerce chatbot that lets you ask questions about products, and gives links as appropriate.
 
-
 ### Get an Anthropic API key
 
 You can get your own Anthropic API key by following the following instructions:
@@ -10,12 +9,9 @@ You can get your own Anthropic API key by following the following instructions:
 2. Click on the `+ Create new secret key` button.
 3. Next, enter an identifier name (optional) and click on the `Create secret key` button.
 
-### Enter the Anthropic API key in Streamlit Community Cloud
-
-To set the Anthropic API key as an environment variable in Streamlit apps, do the following:
-
-1. At the lower right corner, click on `< Manage app` then click on the vertical "..." followed by clicking on `Settings`.
-2. This brings the **App settings**, next click on the `Secrets` tab and paste the API key into the text box as follows:
+### Enter the Anthropic API key in your .env
+1. Copy the .env.example file to .env
+2. Enter the Anthropic API key into the .env file
 
 ```sh
 ANTHROPIC_API_KEY='xxxxxxxxxx'
