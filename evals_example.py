@@ -2,8 +2,10 @@ from product_data import shoes_data
 from evaluation_dataset import evaluation_data
 from anthropic import Anthropic
 import json
+import asyncio
 import re
 import weave
+from chat_model import AnthropicChatbot
 
 # valid_links is of form List[str], or a list of strings.
 
@@ -16,6 +18,7 @@ import weave
 
 shoe_links = [shoe["link"] for shoe in shoes_data]
 
+@weave.op()
 def are_links_valid(model_output: str):
 	# Use a regular expression to check for links, then ensure it's an exact match for one of the links list
 
@@ -33,6 +36,7 @@ def are_links_valid(model_output: str):
 	
 	return True
 
+@weave.op()
 def is_response_length_good(model_output: str) -> bool:
     """
     Check if the model output is longer than 280 characters.
@@ -45,6 +49,7 @@ def is_response_length_good(model_output: str) -> bool:
     """
     return len(model_output) > 280
 
+@weave.op()
 async def is_accurate(expected_output: str, model_output: str) -> dict:
     evaluation_prompt = """You are an expert evaluator of chatbot responses. Your task is to compare an expected output with the actual model output and determine if they convey mostly the same information. Focus on the key points and overall meaning rather than exact wording.
 
@@ -67,7 +72,7 @@ async def is_accurate(expected_output: str, model_output: str) -> dict:
                 model_output=model_output
             )}
         ],
-        response_format={"type": "json_object"}
+        # response_format={"type": "json_object"}
     )
 
     result = json.loads(response.content[0].text)
@@ -78,12 +83,16 @@ async def is_accurate(expected_output: str, model_output: str) -> dict:
 
 
 def run_evals():
+
+    model = AnthropicChatbot()
+    
     evaluation = weave.Evaluation(  
         name='general_evals',  
         dataset=evaluation_data,
-        scorers=[are_links_valid, is_response_length_good]
+        scorers=[are_links_valid, is_response_length_good, is_accurate]
     )
 
+    print(asyncio.run(evaluation.evaluate(model)))
     return evaluation
 
 run_evals()
